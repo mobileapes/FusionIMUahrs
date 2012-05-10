@@ -1,4 +1,4 @@
-XFusionIMUahrs
+FusionIMUahrs
 =============
 
 AHRS Generic Sensor Library
