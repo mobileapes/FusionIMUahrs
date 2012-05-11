@@ -22,9 +22,9 @@ void configIMU() {
   // ITG3200 gyro: 2000 degrees per second (dps) full scale
   // 70 mdps/digit; 1 dps = 0.07
   // ITG-3200 sensitivity is 14.375 LSB/(degrees/sec).
-  imu.config.gyro_gain[_X_] = 1/14.375;
-  imu.config.gyro_gain[_Y_] = 1/14.375;
-  imu.config.gyro_gain[_Z_] = 1/14.375;
+  imu.config.gyro_gain[_X_] = 0.06957  // 1/14.375;
+  imu.config.gyro_gain[_Y_] = 0.06957  // 1/14.375;
+  imu.config.gyro_gain[_Z_] = 0.06957  // 1/14.375;
 
   // Orientation
   // Check your board
@@ -37,12 +37,12 @@ void configIMU() {
   // Positive roll : right wing down
   // Positive yaw : clockwise
   imu.config.signal[GYRO][_X_] = -1;
-  imu.config.signal[GYRO][_Y_] =  1;
+  imu.config.signal[GYRO][_Y_] = -1;
   imu.config.signal[GYRO][_Z_] = -1;  
   imu.config.signal[ACCEL][_X_] = 1;
   imu.config.signal[ACCEL][_Y_] = 1;
   imu.config.signal[ACCEL][_Z_] = 1;
-  imu.config.signal[COMPASS][_X_] = -1;
+  imu.config.signal[COMPASS][_X_] =  1;
   imu.config.signal[COMPASS][_Y_] = -1;
   imu.config.signal[COMPASS][_Z_] = -1;
 }
