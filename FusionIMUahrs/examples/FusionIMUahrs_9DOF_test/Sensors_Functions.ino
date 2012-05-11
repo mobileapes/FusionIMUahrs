@@ -22,9 +22,9 @@ void configIMU() {
   // ITG3200 gyro: 2000 degrees per second (dps) full scale
   // 70 mdps/digit; 1 dps = 0.07
   // ITG-3200 sensitivity is 14.375 LSB/(degrees/sec).
-  imu.config.gyro_gain[_X_] = 0.06957  // 1/14.375;
-  imu.config.gyro_gain[_Y_] = 0.06957  // 1/14.375;
-  imu.config.gyro_gain[_Z_] = 0.06957  // 1/14.375;
+  imu.config.gyro_gain[_X_] = 0.06957;  // 1/14.375
+  imu.config.gyro_gain[_Y_] = 0.06957;  // 1/14.375
+  imu.config.gyro_gain[_Z_] = 0.06957;  // 1/14.375
 
   // Orientation
   // Check your board
@@ -66,6 +66,7 @@ void initGyro() {
 void initAccel() {
   accel = ADXL345();
   accel.powerOn();
+  //accel.setAxisOffset(2, 3, 4);
   delay(2);
 }
 
