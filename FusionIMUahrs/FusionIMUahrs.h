@@ -1,5 +1,5 @@
 /*
- * FusionIMUahrs Library version 0.1.0
+ * FusionIMUahrs Library version YYYYMMDD
  * AHRS Generic Sensor Library (Arduino 1.0 compatible)
  * Copyright (C) 2012-2012 Henrique Dias. All rights reserved.
  * 
