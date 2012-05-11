@@ -1,0 +1,42 @@
+###############################################
+# Syntax Coloring Map For FusionIMUahrs Library
+###############################################
+
+###############################################
+# Datatypes (KEYWORD1)
+###############################################
+
+FusionIMUahrs	KEYWORD1
+config	KEYWORD1
+sample_time	KEYWORD1
+kp	KEYWORD1
+ki	KEYWORD1
+gyro_gain	KEYWORD1
+signal	KEYWORD1
+
+###############################################
+# Methods and Functions (KEYWORD2)
+###############################################
+
+init	KEYWORD2
+update	KEYWORD2
+addReadGyroFunction	KEYWORD2
+addReadAccelFunction	KEYWORD2
+addReadCompassFunction	KEYWORD2
+getRollPitchYaw	KEYWORD2
+getRoll	KEYWORD2
+getPitch	KEYWORD2
+getYaw	KEYWORD2
+
+###############################################
+# Constants (LITERAL1)
+###############################################
+
+ROLLPITCH	LITERAL1
+YAW	LITERAL1
+_X_	LITERAL1
+_Y_	LITERAL1
+_Z_	LITERAL1
+GYRO	LITERAL1
+ACCEL	LITERAL1
+COMPASS	LITERAL1
