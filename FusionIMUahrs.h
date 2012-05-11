@@ -49,8 +49,8 @@
 #define OUTPUTMODE 1
 
 //#define PRINT_DCM 0		// Will print the whole direction cosine matrix
-#define PRINT_ANALOGS 0		// Will print the analog raw data
-#define PRINT_EULER 1		// Will print the Euler angles Roll, Pitch and Yaw
+#define PRINT_ANALOGS	0	// Will print the analog raw data
+#define PRINT_EULER		1	// Will print the Euler angles Roll, Pitch and Yaw
 
 #define IS_9DOF			1	// Set 0 to 6DOF.
 
@@ -67,9 +67,9 @@
 #define ROLLPITCH		0
 #define YAW				1
 
-#define _ROLL_				0
-#define _PITCH_				1
-#define _YAW_				2
+#define _ROLL_			0
+#define _PITCH_			1
+#define _YAW_			2
 
 #define ToRad(x) ((x)*0.017453293f)		//	ToRad(x) ((x)*PI/180)
 #define ToDeg(x) ((x)*57.295779513f)	//	ToDeg(x) ((x)*180/PI)
