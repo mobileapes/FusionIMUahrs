@@ -158,4 +158,5 @@ class FusionIMUahrs {
 		Sensors sensor[2];
 #endif
 };
+
 #endif
