@@ -3,7 +3,7 @@ FusionIMUahrs
 
 AHRS Generic Sensor Arduino Library
 
-FusionIMUahrs Library is based on sf9domahrs by Doug Weibel and Jose Julio:
+FusionIMUahrs Library is based on sf9domahrs by Doug Weibel and Jose Julio: 
 http://code.google.com/p/sf9domahrs/
 
 For more detailed technical information about DCM IMU please refer to this
