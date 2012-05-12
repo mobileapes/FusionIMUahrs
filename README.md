@@ -19,3 +19,19 @@ example files to try it on.
 
 To use this library, copy the FusionIMUahrs directory into the Arduino
 libraries directory.
+
+This has been tested with the following sparkfun boards:
+
+- IMU 9 Degrees of Freedom - Sensor Stick (SEN-10724)
+- IMU Digital Combo Board - 6 Degrees of Freedom ITG3200/ADXL345 (SEN-10121)
+- Combination of two boards to make a 9DOF IMU
+  IMU Digital Combo Board - 6 Degrees of Freedom ITG3200/ADXL345 (SEN-10121)
+  Triple Axis Magnetometer Breakout - HMC5883L (SEN-10530)
+
+Third party Arduino libraries:
+
+- ITG-3200 gyroscope: http://code.google.com/p/itg-3200driver/
+- ADXL345 accelerometer: http://code.google.com/p/adxl345-arduino/
+- HMC5883L compass: http://code.bildr.org/download/976.zip
+
+This is work in progress, and any corrections and additions are most welcome.
