@@ -1,25 +1,19 @@
-//
-// Edit the file FusionIMUahrs.h and set the defined constant "#define IS_9DOF" to 0.
-//
+/*
+ * Edit the file FusionIMUahrs.h and set the defined constant "#define IS_9DOF" to 0.
+ */
 
 #include <Wire.h>
 #include <FusionIMUahrs.h>
-#include <ITG3200.h>        // Download from: http://code.google.com/p/itg-3200driver/
-#include <ADXL345.h>        // Download from: http://code.google.com/p/adxl345driver/
 
 float angles[3];  // roll, pitch, yaw
 
-ITG3200 gyro;
-ADXL345 accel;
-FusionIMUahrs imu;
+FusionIMUahrs imu = FusionIMUahrs();
 
 void setup() {
   Serial.begin(115200);
   Wire.begin();
 
   delay(5);
-
-  imu = FusionIMUahrs();
 
   initGyro();
   initAccel();

@@ -1,8 +1,22 @@
+/*
+ * Data adquisition
+ */
+
+#include <ITG3200.h>        // Download from: http://code.google.com/p/itg-3200driver/
+#include <ADXL345.h>        // Download from: http://code.google.com/p/adxl345driver/
+#include <HMC5883L.h>       // Download from: http://code.bildr.org/download/976.zip
+
 #define TWI_FREQ 400000L     // 100kHz normal mode, 400kHz fast mode
 #define COMPASS_SCALE 0.5
 
+ITG3200 gyro = ITG3200();
+ADXL345 accel = ADXL345();
+HMC5883L compass = HMC5883L();
+
 void configIMU() {
 
+  // How many readings do you need to estimate the offset value for each sensor... (int>0)
+  imu.config.nreadings = 32;
   // How often, in milliseconds, the calculations will be done. (int>0) 
   imu.config.sample_time = 20;  // default: 20 milliseconds
 
@@ -56,7 +70,6 @@ void i2cInit() {
 }
 
 void initGyro() {
-  gyro = ITG3200();
   gyro.reset();
   gyro.init(ITG3200_ADDR_AD0_LOW);
   gyro.zeroCalibrate(2500, 2);
@@ -64,14 +77,11 @@ void initGyro() {
 }
 
 void initAccel() {
-  accel = ADXL345();
   accel.powerOn();
-  //accel.setAxisOffset(2, 3, 4);
   delay(2);
 }
 
 void initCompass() {
-  compass = HMC5883L();
   // Setting scale to +/- 1.3 Ga
   compass.SetScale(COMPASS_SCALE); // Set the scale of the compass.
   compass.SetMeasurementMode(Measurement_Continuous);
@@ -99,7 +109,7 @@ void read_compass(int *axes) {
   axes[0] = raw.XAxis;
   axes[1] = raw.YAxis;
   axes[2] = raw.ZAxis;
-  
+
   return;
 }
 
