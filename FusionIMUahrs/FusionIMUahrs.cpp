@@ -37,17 +37,17 @@ FusionIMUahrs::FusionIMUahrs(void) {
 }
 
 void FusionIMUahrs::init(void) {
-	for(int n=0; n<32; n++) {
+	for(int n = 0; n < config.nreadings; n++) {
 		readGyro();
 		readAccel();
-		for(int i=GYRO; i<=ACCEL; i++)
+		for(int i = GYRO; i <= ACCEL; i++)
 			for(int j=_X_; j<=_Z_; j++)
 				sensor[i].analog_offset[j] += sensor[i].analog_raw[j];
 		delay(2);
 	}
-	for(int i=GYRO; i<=ACCEL; i++)
+	for(int i = GYRO; i <= ACCEL; i++)
 		for(int j=_X_; j<=_Z_; j++)
-			sensor[i].analog_offset[j] /= 32;
+			sensor[i].analog_offset[j] /= config.nreadings;
 
 	sensor[ACCEL].analog_offset[_Z_] -= (config.gravity * config.signal[ACCEL][_Z_]);
 
@@ -64,8 +64,9 @@ void FusionIMUahrs::initializeValues(void) {
 #endif
 
 	config.sample_time = 20;
+	config.nreadings = 32;
 	
-	config.gravity = 248;
+	config.gravity = 0;
 	config.gyro_gain[_X_] = 0.0f;
 	config.gyro_gain[_Y_] = 0.0f;
 	config.gyro_gain[_Z_] = 0.0f;
@@ -184,16 +185,16 @@ void FusionIMUahrs::MatrixUpdate(void) {
 	}
 
 #if OUTPUTMODE == 1
-	createDCM(matrix.update, omega_vector);
+	InitDCMmatrix(matrix.update, omega_vector);
 #else
-	createDCM(matrix.update, gyro_vector);
+	InitDCMmatrix(matrix.update, gyro_vector);
 #endif
 
 	MatrixMultiply(matrix.dcm, matrix.update, matrix.temporary);
 	MatrixAdition(matrix.dcm, matrix.temporary);
 }
 
-void FusionIMUahrs::createDCM(float matrix[3][3], float vector[3]) {
+void FusionIMUahrs::InitDCMmatrix(float matrix[3][3], float vector[3]) {
 	matrix[0][0] =  0;
 	matrix[1][1] =  0;
 	matrix[2][2] =  0;
@@ -263,6 +264,9 @@ void FusionIMUahrs::DriftCorrection(void) {
 		omega.p[i] += error_yaw * config.kp[YAW];
 		omega.i[i] += error_yaw * config.ki[YAW];
 	}
+//#else	
+	// alternative yaw drift correction like a GPS or something more interesting like a camera or even a sound sensor.
+	// I don't know, but the possibilities are numerous.
 #endif
 }
 
