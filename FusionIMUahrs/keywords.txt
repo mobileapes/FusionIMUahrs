@@ -8,6 +8,7 @@
 
 FusionIMUahrs	KEYWORD1
 config	KEYWORD1
+nreadings	KEYWORD1
 sample_time	KEYWORD1
 kp	KEYWORD1
 ki	KEYWORD1
