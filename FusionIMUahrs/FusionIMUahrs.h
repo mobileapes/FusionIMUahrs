@@ -77,6 +77,7 @@
 typedef struct {
 	int sample_time;
 	int gravity;
+	int nreadings;			// How many readings do you need to estimate the offset value for each sensor...
 	float gyro_gain[3];
 	double kp[2];			// {Kp_RollPitch, Kp_Yaw}
 	double ki[2];			// {Ki_RollPitch, Ki_Yaw}
@@ -135,7 +136,7 @@ class FusionIMUahrs {
 		void MatrixUpdate(void);
 		void Normalize(void);
 		void DriftCorrection(void);
-		void createDCM(float matrix[3][3], float vector[3]);
+		void InitDCMmatrix(float matrix[3][3], float vector[3]);
 		void EulerAngles(void);
 //		void debug(char *str, int *a);
 		void PrintData(void);
