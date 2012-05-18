@@ -13,7 +13,7 @@ ADXL345 accel = ADXL345();
 void configIMU() {
 
   // How many readings do you need to estimate the offset value for each sensor... (int>0)
-  imu.config.nreadings = 32;
+  imu.config.nreadings = 1024;
   // How often, in milliseconds, the calculations will be done. (int>0) 
   imu.config.sample_time = 20;  // default: 20 milliseconds
 
@@ -66,7 +66,6 @@ void i2cInit() {
 void initGyro() {
   gyro.reset();
   gyro.init(ITG3200_ADDR_AD0_LOW);
-  gyro.zeroCalibrate(2500, 2);
   delay(2);
 }
 
@@ -77,7 +76,7 @@ void initAccel() {
 
 // function to pass as an argument to read gyroscope data.
 void read_gyro(int *axes) {
-  gyro.readGyroRawCal(&axes[0], &axes[1], &axes[2]);
+  gyro.readGyroRaw(&axes[0], &axes[1], &axes[2]);
 
   return;
 }
