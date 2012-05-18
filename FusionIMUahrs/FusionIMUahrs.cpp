@@ -37,17 +37,21 @@ FusionIMUahrs::FusionIMUahrs(void) {
 }
 
 void FusionIMUahrs::init(void) {
+	float tmp_offsets[2][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+
 	for(int n = 0; n < config.nreadings; n++) {
-		readGyro();
-		readAccel();
+		function_read_gyro(sensor[GYRO].analog_raw);
+		function_read_accel(sensor[ACCEL].analog_raw);
+		
 		for(int i = GYRO; i <= ACCEL; i++)
 			for(int j=_X_; j<=_Z_; j++)
-				sensor[i].analog_offset[j] += sensor[i].analog_raw[j];
+				tmp_offsets[i][j] += sensor[i].analog_raw[j];
+
 		delay(2);
 	}
 	for(int i = GYRO; i <= ACCEL; i++)
 		for(int j=_X_; j<=_Z_; j++)
-			sensor[i].analog_offset[j] /= config.nreadings;
+			sensor[i].analog_offset[j] = (tmp_offsets[i][j] / config.nreadings) + 0.5;
 
 	sensor[ACCEL].analog_offset[_Z_] -= (config.gravity * config.signal[ACCEL][_Z_]);
 
@@ -116,10 +120,8 @@ void FusionIMUahrs::readGyro() {
 	function_read_gyro(sensor[GYRO].analog_raw);
 
 	//debug("Gyro: ", sensor[GYRO].analog_raw);
-	for(int i=_X_; i<=_Z_; i++) { // roll, pitch, yaw
-		sensor[GYRO].analog_raw[i] = ToRad(sensor[GYRO].analog_raw[i]);
+	for(int i=_X_; i<=_Z_; i++) // roll, pitch, yaw
 		sensor[GYRO].corrected_value[i] = config.signal[GYRO][i] * (sensor[GYRO].analog_raw[i] - sensor[GYRO].analog_offset[i]);
-	}
 }
 
 void FusionIMUahrs::addReadAccelFunction(void (*f)(int *)) {
