@@ -8,8 +8,8 @@
 
 FusionIMUahrs	KEYWORD1
 config	KEYWORD1
-nreadings	KEYWORD1
-sample_time	KEYWORD1
+total_samples	KEYWORD1
+sample_delay	KEYWORD1
 kp	KEYWORD1
 ki	KEYWORD1
 gyro_gain	KEYWORD1
