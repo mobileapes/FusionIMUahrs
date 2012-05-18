@@ -15,10 +15,10 @@ HMC5883L compass = HMC5883L();
 
 void configIMU() {
 
-  // How many readings do you need to estimate the offset value for each sensor... (int>0)
-  imu.config.nreadings = 1024;
-  // How often, in milliseconds, the calculations will be done. (int>0) 
-  imu.config.sample_time = 20;  // default: 20 milliseconds
+  // How many samples do you need to estimate the offset value for each sensor... (int>0)
+  imu.config.total_samples = 1024;  // default: 32
+  // delay between samples or how often, in milliseconds, the calculations will be done. (int>0) 
+  imu.config.sample_delay = 2;  // default: 20 milliseconds
 
   // Tuning Parameters (double)
   // Proportional plus integral (PI) feedback controller to produce

@@ -75,9 +75,9 @@
 #define ToDeg(x) ((x)*57.295779513f)	//	ToDeg(x) ((x)*180/PI)
 
 typedef struct {
-	int sample_time;
+	int sample_delay;
 	int gravity;
-	int nreadings;			// How many readings do you need to estimate the offset value for each sensor...
+	int total_samples;		// How many sampless do you need to estimate the offset value for each sensor...
 	float gyro_gain[3];
 	double kp[2];			// {Kp_RollPitch, Kp_Yaw}
 	double ki[2];			// {Ki_RollPitch, Ki_Yaw}

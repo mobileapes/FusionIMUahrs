@@ -39,7 +39,7 @@ FusionIMUahrs::FusionIMUahrs(void) {
 void FusionIMUahrs::init(void) {
 	float tmp_offsets[2][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
-	for(int n = 0; n < config.nreadings; n++) {
+	for(int n = 0; n < config.total_samples; n++) {
 		function_read_gyro(sensor[GYRO].analog_raw);
 		function_read_accel(sensor[ACCEL].analog_raw);
 		
@@ -47,11 +47,11 @@ void FusionIMUahrs::init(void) {
 			for(int j=_X_; j<=_Z_; j++)
 				tmp_offsets[i][j] += sensor[i].analog_raw[j];
 
-		delay(2);
+		delay(config.sample_delay);
 	}
 	for(int i = GYRO; i <= ACCEL; i++)
 		for(int j=_X_; j<=_Z_; j++)
-			sensor[i].analog_offset[j] = (tmp_offsets[i][j] / config.nreadings) + 0.5;
+			sensor[i].analog_offset[j] = (tmp_offsets[i][j] / config.total_samples) + 0.5;
 
 	sensor[ACCEL].analog_offset[_Z_] -= (config.gravity * config.signal[ACCEL][_Z_]);
 
@@ -67,8 +67,8 @@ void FusionIMUahrs::initializeValues(void) {
 	mag_heading = 0.0f;
 #endif
 
-	config.sample_time = 20;
-	config.nreadings = 32;
+	config.total_samples = 32;
+	config.sample_delay = 20;
 	
 	config.gravity = 0;
 	config.gyro_gain[_X_] = 0.0f;
@@ -151,7 +151,7 @@ void FusionIMUahrs::readCompass() {
 #endif
 
 bool FusionIMUahrs::update() {
-	if((millis() - timer) >= config.sample_time) {
+	if((millis() - timer) >= config.sample_delay) {
 		unsigned long timer_old = timer;
 		timer = millis();
 		gyro_dt = (timer > timer_old) ? (timer - timer_old)/1000.0f : 0.0f;
