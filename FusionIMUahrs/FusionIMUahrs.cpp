@@ -42,16 +42,17 @@ void FusionIMUahrs::init(void) {
 	for(int n = 0; n < config.total_samples; n++) {
 		function_read_gyro(sensor[GYRO].analog_raw);
 		function_read_accel(sensor[ACCEL].analog_raw);
-		
-		for(int i = GYRO; i <= ACCEL; i++)
-			for(int j=_X_; j<=_Z_; j++)
-				tmp_offsets[i][j] += sensor[i].analog_raw[j];
+
+		for(int s = GYRO; s <= ACCEL; s++)
+			for(int i = _X_; i <= _Z_; i++)
+				tmp_offsets[s][i] += sensor[s].analog_raw[i];
 
 		delay(config.sample_delay);
 	}
-	for(int i = GYRO; i <= ACCEL; i++)
-		for(int j=_X_; j<=_Z_; j++)
-			sensor[i].analog_offset[j] = (tmp_offsets[i][j] / config.total_samples) + 0.5;
+	
+	for(int s = GYRO; s <= ACCEL; s++)
+		for(int i = _X_; i <= _Z_; i++)
+			sensor[s].analog_offset[i] = (tmp_offsets[s][i] / config.total_samples) + 0.5;
 
 	sensor[ACCEL].analog_offset[_Z_] -= (config.gravity * config.signal[ACCEL][_Z_]);
 
@@ -81,9 +82,9 @@ void FusionIMUahrs::initializeValues(void) {
 	config.ki[YAW] = 0.00002;
 
 #if IS_9DOF == 1	
-	for(int i=GYRO; i<=COMPASS; i++)
-		for(int j=_X_; j<=_Z_; j++)
-			config.signal[i][j] = 1;
+	for(int s = GYRO; s <= COMPASS; s++)
+		for(int i = _X_; i <= _Z_; i++)
+			config.signal[s][i] = 1;
 
 	memcpy(sensor, (int [3][3][3]) {
 		{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},	// Gyro
@@ -91,9 +92,9 @@ void FusionIMUahrs::initializeValues(void) {
 		{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}	// Compass
 	}, 3*sizeof(Sensors));
 #else
-	for(int i=GYRO; i<=ACCEL; i++)
-		for(int j=_X_; j<=_Z_; j++)
-			config.signal[i][j] = 1;
+	for(int s = GYRO; s <= ACCEL; s++)
+		for(int i = _X_; i <= _Z_; i++)
+			config.signal[s][i] = 1;
 
 	memcpy(sensor, (int [3][3][3]) {
 		{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},	// Gyro
@@ -101,7 +102,7 @@ void FusionIMUahrs::initializeValues(void) {
 	}, 2*sizeof(Sensors));
 #endif
 
-	for(int i=0; i<3; i++) {
+	for(int i = 0; i < 3; i++) {
 		accel_vector[i] = 0.0f;
 		omega.p[i] = 0.0f;					// Omega Proportional correction
 		omega.i[i] = 0.0f;					// Omega Integrator
@@ -116,37 +117,13 @@ void FusionIMUahrs::addReadGyroFunction(void (*f)(int *)) {
 	function_read_gyro = f;
 }
 
-void FusionIMUahrs::readGyro() {
-	function_read_gyro(sensor[GYRO].analog_raw);
-
-	//debug("Gyro: ", sensor[GYRO].analog_raw);
-	for(int i=_X_; i<=_Z_; i++) // roll, pitch, yaw
-		sensor[GYRO].corrected_value[i] = config.signal[GYRO][i] * (sensor[GYRO].analog_raw[i] - sensor[GYRO].analog_offset[i]);
-}
-
 void FusionIMUahrs::addReadAccelFunction(void (*f)(int *)) {
 	function_read_accel = f;
-}
-
-void FusionIMUahrs::readAccel() {
-	function_read_accel(sensor[ACCEL].analog_raw);
-
-	//debug("Accel: ", sensor[ACCEL].analog_raw);
-	for(int i=_X_; i<=_Z_; i++)
-		sensor[ACCEL].corrected_value[i] = config.signal[ACCEL][i] * (sensor[ACCEL].analog_raw[i] - sensor[ACCEL].analog_offset[i]);
 }
 
 #if IS_9DOF == 1
 void FusionIMUahrs::addReadCompassFunction(void (*f)(int *)) {
 	function_read_compass = f;
-}
-
-void FusionIMUahrs::readCompass() {
-	function_read_compass(sensor[COMPASS].analog_raw);
-
-	//debug("Compass: ", sensor[COMPASS].analog_raw);	
-	for(int i=_X_; i<=_Z_; i++)
-		sensor[COMPASS].analog_raw[i] *= config.signal[COMPASS][i];
 }
 #endif
 
@@ -156,11 +133,19 @@ bool FusionIMUahrs::update() {
 		timer = millis();
 		gyro_dt = (timer > timer_old) ? (timer - timer_old)/1000.0f : 0.0f;
 
-		readGyro();
-		readAccel();
+		function_read_gyro(sensor[GYRO].analog_raw);
+		function_read_accel(sensor[ACCEL].analog_raw);
+
+		for(int s = GYRO; s <= ACCEL; s++)
+			for(int i = _X_; i <= _Z_; i++) // roll, pitch, yaw
+				sensor[s].corrected_value[i] = config.signal[s][i] * (sensor[s].analog_raw[i] - sensor[s].analog_offset[i]);
+
 #if IS_9DOF == 1
 		if(++counter > 5) {
-			readCompass();
+			function_read_compass(sensor[COMPASS].analog_raw);	
+			for(int i=_X_; i<=_Z_; i++)
+				sensor[COMPASS].analog_raw[i] *= config.signal[COMPASS][i];
+
 			mag_heading = CompassHeading(sensor[COMPASS].analog_raw, angles[_ROLL_], angles[_PITCH_]);
 			counter = 0;
 		}
@@ -180,7 +165,7 @@ void FusionIMUahrs::MatrixUpdate(void) {
 	float gyro_vector[3] = {0.0f, 0.0f, 0.0f};
 	float omega_vector[3] = {0.0f, 0.0f, 0.0f};
 
-	for(int i=_X_; i<=_Z_; i++) {
+	for(int i = _X_; i <= _Z_; i++) {
 		gyro_vector[i] = sensor[GYRO].corrected_value[i] * ToRad(config.gyro_gain[i]);
 		accel_vector[i] = sensor[ACCEL].corrected_value[i];
 		omega_vector[i] = gyro_vector[i] + omega.i[i] + omega.p[i];
@@ -295,17 +280,6 @@ float FusionIMUahrs::getPitch(void) {
 float FusionIMUahrs::getYaw(void) {
 	return ToDeg(angles[_YAW_]);
 }
-
-/*
-void FusionIMUahrs::debug(char *str, int *a) {
-	Serial.print(str);
-	Serial.print(a[0]);
-	Serial.print(" ");
-	Serial.print(a[1]);
-	Serial.print(" ");
-	Serial.println(a[2]);
-}
-*/
 
 void FusionIMUahrs::PrintData(void) {
 #if DEBUG_MODE == 1

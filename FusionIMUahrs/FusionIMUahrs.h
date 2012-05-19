@@ -130,15 +130,12 @@ class FusionIMUahrs {
     private:
 		void initializeValues(void);
 		void (*function_read_gyro)(int *);
-		void readGyro(void);
 		void (*function_read_accel)(int *);
-		void readAccel(void);
 		void MatrixUpdate(void);
 		void Normalize(void);
 		void DriftCorrection(void);
 		void InitDCMmatrix(float matrix[3][3], float vector[3]);
 		void EulerAngles(void);
-//		void debug(char *str, int *a);
 		void PrintData(void);
 
 		float gyro_dt;
@@ -150,7 +147,6 @@ class FusionIMUahrs {
 		float angles[3];
 #if IS_9DOF == 1
 		void (*function_read_compass)(int *);
-		void readCompass(void);
 
 		Sensors sensor[3];
 		float mag_heading;
