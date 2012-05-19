@@ -126,29 +126,34 @@ void FusionIMUahrs::addReadCompassFunction(void (*f)(int *)) {
 }
 #endif
 
+void FusionIMUahrs::readData() {
+	function_read_gyro(sensor[GYRO].analog_raw);
+	function_read_accel(sensor[ACCEL].analog_raw);
+
+	for(int s = GYRO; s <= ACCEL; s++)
+		for(int i = _X_; i <= _Z_; i++) // roll, pitch, yaw
+			sensor[s].corrected_value[i] = config.signal[s][i] * (sensor[s].analog_raw[i] - sensor[s].analog_offset[i]);
+
+#if IS_9DOF == 1
+	if(++counter > 5) {
+		function_read_compass(sensor[COMPASS].analog_raw);	
+		for(int i = _X_; i <= _Z_; i++)
+			sensor[COMPASS].analog_raw[i] *= config.signal[COMPASS][i];
+
+		mag_heading = CompassHeading(sensor[COMPASS].analog_raw, angles[_ROLL_], angles[_PITCH_]);
+		counter = 0;
+	}
+#endif
+}
+
 bool FusionIMUahrs::update() {
 	if((millis() - timer) >= config.sample_delay) {
 		unsigned long timer_old = timer;
 		timer = millis();
 		gyro_dt = (timer > timer_old) ? (timer - timer_old)/1000.0f : 0.0f;
 
-		function_read_gyro(sensor[GYRO].analog_raw);
-		function_read_accel(sensor[ACCEL].analog_raw);
+		readData();
 
-		for(int s = GYRO; s <= ACCEL; s++)
-			for(int i = _X_; i <= _Z_; i++) // roll, pitch, yaw
-				sensor[s].corrected_value[i] = config.signal[s][i] * (sensor[s].analog_raw[i] - sensor[s].analog_offset[i]);
-
-#if IS_9DOF == 1
-		if(++counter > 5) {
-			function_read_compass(sensor[COMPASS].analog_raw);	
-			for(int i = _X_; i <= _Z_; i++)
-				sensor[COMPASS].analog_raw[i] *= config.signal[COMPASS][i];
-
-			mag_heading = CompassHeading(sensor[COMPASS].analog_raw, angles[_ROLL_], angles[_PITCH_]);
-			counter = 0;
-		}
-#endif
 		MatrixUpdate();
 		Normalize();
 		DriftCorrection();
