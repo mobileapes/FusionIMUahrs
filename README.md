@@ -14,6 +14,7 @@ This generic library, works with any sensor that forms part of a IMU
 
 
 How to get the library:
+-----------------------
 
 Directly from github.
 
@@ -26,6 +27,7 @@ http://github.com/mobileapes/FusionIMUahrs and clicking "Download". Then
 unpack the tarball or zip.
 
 How to use the library:
+-----------------------
 
 1. Copy the FusionIMUahrs directory into the Arduino libraries directory.
 
@@ -44,6 +46,7 @@ This has been tested with the following sparkfun boards:
 	2. Triple Axis Magnetometer Breakout - HMC5883L (SEN-10530)
 
 Third party Arduino libraries:
+------------------------------
 
 - ITG-3200 gyroscope: http://code.google.com/p/itg-3200driver/
 - ADXL345 accelerometer: http://code.google.com/p/adxl345-arduino/
