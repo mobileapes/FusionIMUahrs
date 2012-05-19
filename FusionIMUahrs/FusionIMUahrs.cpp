@@ -72,9 +72,8 @@ void FusionIMUahrs::initializeValues(void) {
 	config.sample_delay = 20;
 	
 	config.gravity = 0;
-	config.gyro_gain[_X_] = 0.0f;
-	config.gyro_gain[_Y_] = 0.0f;
-	config.gyro_gain[_Z_] = 0.0f;
+	for(int i = _X_; i <= _Z_; i++)
+		config.gyro_gain[i] = 0.0f;
 
 	config.kp[ROLLPITCH] = 0.02;
 	config.kp[YAW] = 1.2;
@@ -143,7 +142,7 @@ bool FusionIMUahrs::update() {
 #if IS_9DOF == 1
 		if(++counter > 5) {
 			function_read_compass(sensor[COMPASS].analog_raw);	
-			for(int i=_X_; i<=_Z_; i++)
+			for(int i = _X_; i <= _Z_; i++)
 				sensor[COMPASS].analog_raw[i] *= config.signal[COMPASS][i];
 
 			mag_heading = CompassHeading(sensor[COMPASS].analog_raw, angles[_ROLL_], angles[_PITCH_]);
