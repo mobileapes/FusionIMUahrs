@@ -131,6 +131,7 @@ class FusionIMUahrs {
 		void initializeValues(void);
 		void (*function_read_gyro)(int *);
 		void (*function_read_accel)(int *);
+		void readData(void);
 		void MatrixUpdate(void);
 		void Normalize(void);
 		void DriftCorrection(void);
